@@ -1,6 +1,6 @@
 import random
 import copy
-
+import bonus
 class Slot:
     """ This defines the blueprint of the slot """
     def __init__(self,paytable,reels,rows, columns,paylines,symbols,reels_free):
@@ -21,9 +21,13 @@ class Slot:
         self.total_free_win = 0
         self.base_win = 0
         self.free_win = 0
+        self.bonus_win = 0
         self.bet = 0
         self.free_hits = 0
         self.bonus_hits = 0
+        self.mult = {3:[5,7,10,15,20,25],
+                4:[5,10,15,20,30,50],
+                5:[25,30,40,50,75,100] }
 
 
     def evaluate_line(self, line):
@@ -32,7 +36,7 @@ class Slot:
         #print('Payline is',line)
         wild_count = 0
         pay_sym = line[0]
-        if line[0] != 'w':
+        if line[0] != 'w' and line[0] !='z':
             Pay_sym = line[0]
             for i in range(1, 5):
                 if line[i] == pay_sym or line[i] == 'w':
@@ -40,12 +44,43 @@ class Slot:
                 else:
                     break
             # In case first symbol is not wild
-            self.combinations[pay_sym][count] = self.combinations[pay_sym][count] + 1
-            return self.paytable[pay_sym][count]
+            if pay_sym !='z':
+                self.combinations[pay_sym][count] = self.combinations[pay_sym][count] + 1
+                return self.paytable[pay_sym][count]
+    
+        elif line[0] == 'z':
+            
+            count = 1
+            
+            for i in range(1,5):
+                if line[i] == 'z':
+                    count = count + 1
+                else:
+                    break
 
-        # If first symbol is wild
-        # Check wild count
-        print('Error. Please check the code')
+            
+            
+            if count >= 3:
+                self.bonus_hits = self.bonus_hits + 1
+                win = bonus.ev(self.mult[count]) #37.92078
+                self.bonus_win = self.bonus_win + win
+                #print('Line is', line)
+                return win
+            else:
+                return 0
+            """elif count == 4:
+                self.bonus_win = self.bonus_win + 60.11831
+                #print('Line is', line)
+                return 60.11831
+            elif count == 5:
+                self.bonus_win = self.bonus_win + 147.9835
+                #print('Line is', line)
+                return 147.9835
+            """
+
+
+            
+        
 
     def evaluate_free_win(self):
         """ This method evaluates the free game win """
@@ -141,7 +176,9 @@ class Slot:
 
 
         print('RTP is',self.total_win*100/(len(self.paylines)*spins))
+        print('Bonus RTP is',self.bonus_win*100/self.bet)
         print('Free hit frequency',spins/self.free_hits)
+        print('Bonus hit frequency is',spins/self.bonus_hits)
         print('Base RTP is ',self.base_win*100/self.bet)
         print('Free RTP is ',self.free_win*100/self.bet)
         print(self.combinations)

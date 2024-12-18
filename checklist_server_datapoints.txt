@@ -1,0 +1,15 @@
+Game RTP
+Base RTP
+Bonus RTP
+Free spin RTP
+Hit rate of Base game
+Hit frequency of Free spins
+Hit Frequency of Bonus Game
+Maximum win in a spin
+
+Win profile( List of wins and frequencies )
+
+Base game hits for each symbol for each 3X, 4X and 5X
+
+Free game hits for each symbol for each 3X, 4X and 5X
+

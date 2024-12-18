@@ -1,10 +1,10 @@
 
 import random as ri
 
-def ev(mult):
+def find_bonus_win(mult):
+    """ This will trigger a bonus wheel round. The wheel keeps spinning and with each spin multiplier added to pot and sector becomes collect """
     sum = 0
     n = len(mult)
-    #mult = [1,2,3,4,5,6]
     collect_list = [ 0,0,0,0,0,0]
     while True:
         r = ri.randint(1,n)
